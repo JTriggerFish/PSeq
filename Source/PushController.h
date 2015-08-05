@@ -25,6 +25,26 @@ namespace Push
 	MidiMessage sceneButtonChangeMessage (uint8 num, uint8 color);
 	MidiMessage buttonChangeMessage (Identifier button, uint8 state);
 	MidiMessage displayChangeMessage (uint8 line, String text);
+    
+    /** Class encapsulating the ValueTree that represents the controller state and related static methdods and constants */
+    class PushState
+    {
+    public:
+        static const Identifier ControllerState;
+        static const Identifier PadsState;
+        static const Identifier TopRowState;
+        static const Identifier BottomRowState;
+        static const Identifier SceneButtonsState;
+        static const Identifier ButtonsState;
+        static const Identifier DisplayState;
+        
+        static const Identifier Color;
+        static const Identifier ButtonState;
+        static const Identifier IsPressed;
+        static const Identifier LineText;
+        
+        static ValueTree createNewDefaultState();
+    };
 }
 
 

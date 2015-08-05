@@ -72,4 +72,33 @@ namespace Push
 
 		return MidiMessage::createSysExMessage(m, messageSize);
 	}
+    const Identifier PushState::ControllerState     = Identifier("ControllerState");
+    const Identifier PushState::PadsState           = Identifier("PadsState");
+    const Identifier PushState::TopRowState         = Identifier("TopRowState");
+    const Identifier PushState::BottomRowState      = Identifier("BottomRowState");
+    const Identifier PushState::SceneButtonsState   = Identifier("SceneButtonsState");
+    const Identifier PushState::ButtonsState        = Identifier("ButtonsState");
+    const Identifier PushState::DisplayState        = Identifier("DisplayState");
+    
+    const Identifier PushState::Color               = Identifier("Color");
+    const Identifier PushState::ButtonState         = Identifier("ButtonState");
+    const Identifier PushState::IsPressed           = Identifier("IsPressed");
+    const Identifier PushState::LineText            = Identifier("LineText");
+    
+    ValueTree PushState::createNewDefaultState()
+    {
+        ValueTree state(ControllerState);
+        ValueTree padsState(PadsState);
+        
+        padsState.setProperty(Color, Array<var>(), nullptr);
+        auto colors = padsState[Color];
+        colors.resize(8*8);
+        for(auto i =0; i < colors.size(); ++i)
+            colors[i] = Push::PadColors::black;
+            
+        
+        state.addChild(padsState, -1, nullptr);
+        
+        return state;
+    }
 }
