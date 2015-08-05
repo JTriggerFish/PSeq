@@ -72,18 +72,18 @@ namespace Push
 
 		return MidiMessage::createSysExMessage(m, messageSize);
 	}
-    const Identifier PushState::ControllerState     = Identifier("ControllerState");
-    const Identifier PushState::PadsState           = Identifier("PadsState");
-    const Identifier PushState::TopRowState         = Identifier("TopRowState");
-    const Identifier PushState::BottomRowState      = Identifier("BottomRowState");
-    const Identifier PushState::SceneButtonsState   = Identifier("SceneButtonsState");
-    const Identifier PushState::ButtonsState        = Identifier("ButtonsState");
-    const Identifier PushState::DisplayState        = Identifier("DisplayState");
+    const auto PushState::ControllerState     = Identifier("ControllerState");
+    const auto PushState::PadsState           = Identifier("PadsState");
+    const auto PushState::TopRowState         = Identifier("TopRowState");
+    const auto PushState::BottomRowState      = Identifier("BottomRowState");
+    const auto PushState::SceneButtonsState   = Identifier("SceneButtonsState");
+    const auto PushState::ButtonsState        = Identifier("ButtonsState");
+    const auto PushState::DisplayState        = Identifier("DisplayState");
     
-    const Identifier PushState::Color               = Identifier("Color");
-    const Identifier PushState::ButtonState         = Identifier("ButtonState");
-    const Identifier PushState::IsPressed           = Identifier("IsPressed");
-    const Identifier PushState::LineText            = Identifier("LineText");
+    const auto PushState::Color               = Identifier("Color");
+    const auto PushState::ButtonState         = Identifier("ButtonState");
+    const auto PushState::IsPressed           = Identifier("IsPressed");
+    const auto PushState::LineText            = Identifier("LineText");
     
     ValueTree PushState::createNewDefaultState()
     {
