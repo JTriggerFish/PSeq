@@ -85,20 +85,35 @@ namespace Push
     const auto PushState::IsPressed           = Identifier("IsPressed");
     const auto PushState::LineText            = Identifier("LineText");
     
+    const auto PushState::Handlers            = Identifier("Handlers");
+    
     ValueTree PushState::createNewDefaultState()
     {
         ValueTree state(ControllerState);
-        ValueTree padsState(PadsState);
+        {
+            ValueTree padsState(PadsState);
+            padsState.setProperty(Color, Array<var>(), nullptr);
+            auto colors = padsState[Color];
+            colors.resize(8*8);
+            for(auto i =0; i < colors.size(); ++i)
+                colors[i] = Push::PadColors::black;
+            state.addChild(padsState, -1, nullptr);
+        }
+        {
+            ValueTree topRowState(TopRowState);
+            topRowState.setProperty(Color, Array<var>(), nullptr);
+            auto colors = topRowState[Color];
+            colors.resize(8);
+            for(auto i =0; i < colors.size(); ++i)
+                colors[i] = Push::TopRowColors::black;
+            state.addChild(topRowState, -1, nullptr);
+        }
+        //TODO
         
-        padsState.setProperty(Color, Array<var>(), nullptr);
-        auto colors = padsState[Color];
-        colors.resize(8*8);
-        for(auto i =0; i < colors.size(); ++i)
-            colors[i] = Push::PadColors::black;
-            
-        
-        state.addChild(padsState, -1, nullptr);
+        //Do nothing with events by default.
+        state.setProperty(Handlers, Array<var>(), nullptr);
         
         return state;
     }
+
 }

@@ -62,7 +62,7 @@ namespace Push
 
 	bool Buttons::_isMapInitialized = false;
 
-	const HashMap<Identifier, uint8, Buttons::HashGenerator>& Buttons::buttonsToMidiCC()
+	const HashMap<Identifier, uint8, IdentifierHash>& Buttons::buttonsToMidiCC()
 	{
 		if (_isMapInitialized)
 		{

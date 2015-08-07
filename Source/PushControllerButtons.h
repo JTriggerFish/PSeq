@@ -15,6 +15,14 @@
 
 namespace Push
 {
+    struct IdentifierHash
+    {
+        static DefaultHashFunctions func;
+        int generateHash(Identifier key, int upperLimit) const
+        {
+            return func.generateHash(key.toString(), upperLimit);
+        }
+    };
 	class Buttons
 	{
 	public:
@@ -62,20 +70,13 @@ namespace Push
 		enum States  { Off = 0, On = 1, Hi = 4 };
 
 
-		struct HashGenerator
-		{
-			static DefaultHashFunctions func;
-			int generateHash(Identifier key, int upperLimit) const
-			{
-				return func.generateHash(key.toString(), upperLimit);
-			}
-		};
-		static const Identifier			         allButtons[];
-		static const HashMap<Identifier, uint8, HashGenerator>& buttonsToMidiCC();
+
+		static const Identifier allButtons[];
+		static const HashMap<Identifier, uint8, IdentifierHash>& buttonsToMidiCC();
 
 	private:
-		static HashMap<Identifier, uint8, HashGenerator> _buttonsToMidiCC;
-		static bool					      _isMapInitialized;
+		static HashMap<Identifier, uint8, IdentifierHash> _buttonsToMidiCC;
+		static bool                                       _isMapInitialized;
 	};
 }
 

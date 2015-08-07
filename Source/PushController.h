@@ -30,6 +30,9 @@ namespace Push
     class PushState
     {
     public:
+        typedef std::function<void(MidiMessage,ValueTree)> EventHandlerFunc;
+        
+        //Identifiers for the state ValueTree
         static const Identifier ControllerState;
         static const Identifier PadsState;
         static const Identifier TopRowState;
@@ -43,7 +46,29 @@ namespace Push
         static const Identifier IsPressed;
         static const Identifier LineText;
         
+        static const Identifier Handlers;
+        
+        //Current active state
+        static ValueTree activeState;
+        
+        static void setActiveStateListener(ReferenceCountedObjectPtr<ValueTree::Listener>&&  activeStateListener);
+        /** Create a default empty state with neutral buttons and screen
+         *  and no handlers */
         static ValueTree createNewDefaultState();
+        /** Add a handler to the repository. An error will be thrown if there is an existing
+         *  handler with this identifier */
+        static void registerHandler(Identifier name, const EventHandlerFunc&& func);
+        static bool checkIfHandlerExists(Identifier name);
+        
+        /** Add an event handler to a state. Note that handlers are executed in order and thus
+        the position matters since handlers may modify the state. By default insert at the end of the 
+         list */
+        static void addHandlerToState(ValueTree state, Identifier handlerName, int pos=-1);
+        
+    private:
+        //Event handler repository
+        static HashMap<Identifier,EventHandlerFunc>             eventHandlers;
+        static ReferenceCountedObjectPtr<ValueTree::Listener>   activeStateListener;
     };
 }
 
