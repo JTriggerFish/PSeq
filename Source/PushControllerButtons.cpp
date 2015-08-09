@@ -61,6 +61,7 @@ namespace Push
 
 
 	bool Buttons::_isMapInitialized = false;
+    auto Push::Buttons::_buttonsToMidiCC = HashMap<Identifier, uint8, Push::IdentifierHash>();
 
 	const HashMap<Identifier, uint8, IdentifierHash>& Buttons::buttonsToMidiCC()
 	{

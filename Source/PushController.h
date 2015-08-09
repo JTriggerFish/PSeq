@@ -52,8 +52,17 @@ namespace Push
         static ValueTree activeState;
         
         static void setActiveStateListener(ReferenceCountedObjectPtr<ValueTree::Listener>&&  activeStateListener);
-        /** Create a default empty state with neutral buttons and screen
+        
+        /** The class is a thin wrapper around a ValueTree intended to add some convenience functions.
+         *  The constructor creates a default empty state with neutral buttons and screen
          *  and no handlers */
+        PushState()
+        {
+            state = createNewDefaultState();
+        }
+        virtual ~PushState() {}
+        operator ValueTree() { return state; }
+        
         static ValueTree createNewDefaultState();
         /** Add a handler to the repository. An error will be thrown if there is an existing
          *  handler with this identifier */
@@ -69,6 +78,8 @@ namespace Push
         //Event handler repository
         static HashMap<Identifier,EventHandlerFunc>             eventHandlers;
         static ReferenceCountedObjectPtr<ValueTree::Listener>   activeStateListener;
+        
+        ValueTree state;
     };
 }
 
