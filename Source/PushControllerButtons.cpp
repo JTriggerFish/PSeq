@@ -12,46 +12,48 @@
 
 namespace Push
 {
-	const auto Buttons::Tap		  = Identifier("Tap");
-	const auto Buttons::Metronome   = Identifier("Metronome");
-	const auto Buttons::Master	  = Identifier("Master");
-	const auto Buttons::Stop		  = Identifier("Stop");
-	const auto Buttons::Left		  = Identifier("Left");
-	const auto Buttons::Right		  = Identifier("Right");
-	const auto Buttons::Up		  = Identifier("Up");
-	const auto Buttons::Down		  = Identifier("Down");
-	const auto Buttons::Select	  = Identifier("Select");
-	const auto Buttons::Shift		  = Identifier("Shift");
-	const auto Buttons::Note		  = Identifier("Note");
-	const auto Buttons::Session	  = Identifier("Session");
-	const auto Buttons::AddEffect   = Identifier("AddEffect");
-	const auto Buttons::AddTrack	  = Identifier("AddTrack");
-	const auto Buttons::OctaveDown  = Identifier("OctaveDown");
-	const auto Buttons::OctaveUp	  = Identifier("OctaveUp");
-	const auto Buttons::Repeat	  = Identifier("Repeat");
-	const auto Buttons::Accent	  = Identifier("Accent");
-	const auto Buttons::Scales	  = Identifier("Scales");
-	const auto Buttons::UserMode	  = Identifier("UserMode");
-	const auto Buttons::Mute		  = Identifier("Mute");
-	const auto Buttons::Solo	      = Identifier("Solo");
-	const auto Buttons::DeviceLeft  = Identifier("DeviceLeft");
-	const auto Buttons::DeviceRight = Identifier("DeviceRight");
-	const auto Buttons::Play		  = Identifier("Play");
-	const auto Buttons::Record	  = Identifier("Record");
-	const auto Buttons::New		  = Identifier("New");
-	const auto Buttons::Duplicate   = Identifier("Duplicate");
-	const auto Buttons::Automation  = Identifier("Automation");
-	const auto Buttons::FixedLength = Identifier("FixedLength");
-	const auto Buttons::Device	  = Identifier("Device");
-	const auto Buttons::Browse	  = Identifier("Browse");
-	const auto Buttons::Track		  = Identifier("Track");
-	const auto Buttons::Clip		  = Identifier("Clip");
-	const auto Buttons::Volume	  = Identifier("Volume");
-	const auto Buttons::PanSend	  = Identifier("PanSend");
-	const auto Buttons::Quantize	  = Identifier("Quantize");
-	const auto Buttons::Double	  = Identifier("Double");
-	const auto Buttons::Delete	  = Identifier("Delete");
-	const auto Buttons::Undo		  = Identifier("Undo");
+	DefaultHashFunctions Push::IdentifierHash::func = DefaultHashFunctions();
+
+	const Identifier Buttons::Tap		  = Identifier("Tap");
+	const Identifier Buttons::Metronome   = Identifier("Metronome");
+	const Identifier Buttons::Master	  = Identifier("Master");
+	const Identifier Buttons::Stop		  = Identifier("Stop");
+	const Identifier Buttons::Left		  = Identifier("Left");
+	const Identifier Buttons::Right		  = Identifier("Right");
+	const Identifier Buttons::Up		  = Identifier("Up");
+	const Identifier Buttons::Down		  = Identifier("Down");
+	const Identifier Buttons::Select	  = Identifier("Select");
+	const Identifier Buttons::Shift		  = Identifier("Shift");
+	const Identifier Buttons::Note		  = Identifier("Note");
+	const Identifier Buttons::Session	  = Identifier("Session");
+	const Identifier Buttons::AddEffect   = Identifier("AddEffect");
+	const Identifier Buttons::AddTrack	  = Identifier("AddTrack");
+	const Identifier Buttons::OctaveDown  = Identifier("OctaveDown");
+	const Identifier Buttons::OctaveUp	  = Identifier("OctaveUp");
+	const Identifier Buttons::Repeat	  = Identifier("Repeat");
+	const Identifier Buttons::Accent	  = Identifier("Accent");
+	const Identifier Buttons::Scales	  = Identifier("Scales");
+	const Identifier Buttons::UserMode	  = Identifier("UserMode");
+	const Identifier Buttons::Mute		  = Identifier("Mute");
+	const Identifier Buttons::Solo	      = Identifier("Solo");
+	const Identifier Buttons::DeviceLeft  = Identifier("DeviceLeft");
+	const Identifier Buttons::DeviceRight = Identifier("DeviceRight");
+	const Identifier Buttons::Play		  = Identifier("Play");
+	const Identifier Buttons::Record	  = Identifier("Record");
+	const Identifier Buttons::New		  = Identifier("New");
+	const Identifier Buttons::Duplicate   = Identifier("Duplicate");
+	const Identifier Buttons::Automation  = Identifier("Automation");
+	const Identifier Buttons::FixedLength = Identifier("FixedLength");
+	const Identifier Buttons::Device	  = Identifier("Device");
+	const Identifier Buttons::Browse	  = Identifier("Browse");
+	const Identifier Buttons::Track		  = Identifier("Track");
+	const Identifier Buttons::Clip		  = Identifier("Clip");
+	const Identifier Buttons::Volume	  = Identifier("Volume");
+	const Identifier Buttons::PanSend	  = Identifier("PanSend");
+	const Identifier Buttons::Quantize	  = Identifier("Quantize");
+	const Identifier Buttons::Double	  = Identifier("Double");
+	const Identifier Buttons::Delete	  = Identifier("Delete");
+	const Identifier Buttons::Undo		  = Identifier("Undo");
 
 	const Identifier Buttons::allButtons[] = { "Tap", "Metronome", "Master", "Stop", "Left", "Right", "Up", "Down",
 		"Select", "Shift", "Note", "Session", "AddEffect", "AddTrack", "OctaveDown",
@@ -60,8 +62,8 @@ namespace Push
 		"Browse", "Track", "Clip", "Volume", "PanSend", "Quantize", "Double", "Delete", "Undo" };
 
 
+	HashMap<Identifier, uint8, IdentifierHash> Push::Buttons::_buttonsToMidiCC;
 	bool Buttons::_isMapInitialized = false;
-    auto Push::Buttons::_buttonsToMidiCC = HashMap<Identifier, uint8, Push::IdentifierHash>();
 
 	const HashMap<Identifier, uint8, IdentifierHash>& Buttons::buttonsToMidiCC()
 	{

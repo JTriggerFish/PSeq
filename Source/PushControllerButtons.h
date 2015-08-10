@@ -75,7 +75,7 @@ namespace Push
 		static const HashMap<Identifier, uint8, IdentifierHash>& buttonsToMidiCC();
 
 	private:
-		static HashMap<Identifier, uint8, IdentifierHash> _buttonsToMidiCC;
+		static HashMap<Identifier, uint8, IdentifierHash> _buttonsToMidiCC ;
 		static bool                                       _isMapInitialized;
 	};
 }

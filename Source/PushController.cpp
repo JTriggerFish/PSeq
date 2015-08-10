@@ -43,8 +43,8 @@ namespace Push
 	}
 	MidiMessage displayChangeMessage(uint8 line, String text)
 	{
-		static const uint8 maxStringSize = 68;
-		static const uint8 messageSize   = 75; // Note the total message size is 77 with the header and tail bytes that createSysExMessage adds
+		static const int   maxStringSize = 68;
+		static const int   messageSize   = 75; // Note the total message size is 77 with the header and tail bytes that createSysExMessage adds
 
 		jassert(line < 4);
 		jassert(text.length() < maxStringSize);
@@ -61,10 +61,10 @@ namespace Push
 		m[5] = 0x45;
 		m[6] = 0x0;
 		
-		size_t i = 7;
-		for (auto c = 0; c < std::min((size_t)text.length(), (size_t)maxStringSize ); ++c)
+		int i = 7;
+		for (auto c = 0; c < std::min(text.length(), maxStringSize ); ++c)
 		{
-			m[i] = (text[i] & 127);
+			m[i] = static_cast<uint8>(text[i] & 127);
 			++i;
 		}
 		for (; i < messageSize; ++i)
@@ -72,20 +72,23 @@ namespace Push
 
 		return MidiMessage::createSysExMessage(m, messageSize);
 	}
-    const auto PushState::ControllerState     = Identifier("ControllerState");
-    const auto PushState::PadsState           = Identifier("PadsState");
-    const auto PushState::TopRowState         = Identifier("TopRowState");
-    const auto PushState::BottomRowState      = Identifier("BottomRowState");
-    const auto PushState::SceneButtonsState   = Identifier("SceneButtonsState");
-    const auto PushState::ButtonsState        = Identifier("ButtonsState");
-    const auto PushState::DisplayState        = Identifier("DisplayState");
+    const Identifier PushState::ControllerState     = Identifier("ControllerState");
+    const Identifier PushState::PadsState           = Identifier("PadsState");
+    const Identifier PushState::TopRowState         = Identifier("TopRowState");
+    const Identifier PushState::BottomRowState      = Identifier("BottomRowState");
+    const Identifier PushState::SceneButtonsState   = Identifier("SceneButtonsState");
+    const Identifier PushState::ButtonsState        = Identifier("ButtonsState");
+    const Identifier PushState::DisplayState        = Identifier("DisplayState");
     
-    const auto PushState::Color               = Identifier("Color");
-    const auto PushState::ButtonState         = Identifier("ButtonState");
-    const auto PushState::IsPressed           = Identifier("IsPressed");
-    const auto PushState::LineText            = Identifier("LineText");
+    const Identifier PushState::Color               = Identifier("Color");
+    const Identifier PushState::ButtonState         = Identifier("ButtonState");
+    const Identifier PushState::IsPressed           = Identifier("IsPressed");
+    const Identifier PushState::LineText            = Identifier("LineText");
     
-    const auto PushState::Handlers            = Identifier("Handlers");
+    const Identifier PushState::Handlers            = Identifier("Handlers");
+
+	HashMap<Identifier, PushState::EventHandlerFunc> PushState::eventHandlers;
+	ReferenceCountedObjectPtr<PushControllerHandle>  PushState::activeStateListener;
     
     ValueTree PushState::createNewDefaultState()
     {
@@ -104,11 +107,53 @@ namespace Push
             topRowState.setProperty(Color, Array<var>(), nullptr);
             auto colors = topRowState[Color];
             colors.resize(8);
-            for(auto i =0; i < colors.size(); ++i)
+            for(auto i = 0; i < colors.size(); ++i)
                 colors[i] = Push::TopRowColors::black;
+			topRowState.setProperty(IsPressed, Array<var>(), nullptr);
+			auto isPressed = topRowState[IsPressed];
+			isPressed.resize(8);
+			for (auto i = 0; i < isPressed.size(); ++i)
+				isPressed[i] = false;
             state.addChild(topRowState, -1, nullptr);
-        }
-        //TODO
+		}
+		{
+			ValueTree bottomRowState(BottomRowState);
+			bottomRowState.setProperty(Color, Array<var>(), nullptr);
+			auto colors = bottomRowState[Color];
+			colors.resize(8);
+			for (auto i = 0; i < colors.size(); ++i)
+				colors[i] = Push::TopRowColors::black;
+			bottomRowState.setProperty(IsPressed, Array<var>(), nullptr);
+			auto isPressed = bottomRowState[IsPressed];
+			isPressed.resize(8);
+			for (auto i = 0; i < isPressed.size(); ++i)
+				isPressed[i] = false;
+			state.addChild(bottomRowState, -1, nullptr);
+		}
+		{
+			ValueTree sceneButtonsState(SceneButtonsState);
+			sceneButtonsState.setProperty(Color, Array<var>(), nullptr);
+			auto colors = sceneButtonsState[Color];
+			colors.resize(8);
+			for (auto i = 0; i < colors.size(); ++i)
+				colors[i] = Push::SceneColors::red;
+			sceneButtonsState.setProperty(IsPressed, Array<var>(), nullptr);
+			auto isPressed = sceneButtonsState[IsPressed];
+			isPressed.resize(8);
+			for (auto i = 0; i < isPressed.size(); ++i)
+				isPressed[i] = false;
+			state.addChild(sceneButtonsState, -1, nullptr);
+		}
+		{
+			ValueTree buttonsState(ButtonsState);
+			//TODO
+			state.addChild(buttonsState, -1, nullptr);
+		}
+		{
+			ValueTree displayState(DisplayState);
+			//TODO
+			state.addChild(displayState, -1, nullptr);
+		}
         
         //Do nothing with events by default.
         state.setProperty(Handlers, Array<var>(), nullptr);
