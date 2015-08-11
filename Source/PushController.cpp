@@ -87,8 +87,8 @@ namespace Push
     
     const Identifier PushState::Handlers            = Identifier("Handlers");
 
-	HashMap<Identifier, PushState::EventHandlerFunc> PushState::eventHandlers;
-	ReferenceCountedObjectPtr<PushControllerHandle>  PushState::activeStateListener;
+	HashMap<String, PushState::EventHandlerFunc>    PushState::eventHandlers;
+	ReferenceCountedObjectPtr<PushControllerHandle> PushState::activeStateListener;
     
     ValueTree PushState::createNewDefaultState()
     {
@@ -146,12 +146,22 @@ namespace Push
 		}
 		{
 			ValueTree buttonsState(ButtonsState);
-			//TODO
+			for (auto i : Push::Buttons::allButtons)
+			{
+				ValueTree bt(i);
+				bt.setProperty(ButtonState, Push::Buttons::On, nullptr);
+				bt.setProperty(IsPressed, false, nullptr);
+				buttonsState.addChild(bt, -1, nullptr);
+			}
 			state.addChild(buttonsState, -1, nullptr);
 		}
 		{
 			ValueTree displayState(DisplayState);
-			//TODO
+			displayState.setProperty(LineText, Array<var>(), nullptr);
+			auto lines = displayState[LineText];
+			lines.resize(4);
+			for (auto i = 0; i < lines.size(); ++i)
+				lines[i] = "";
 			state.addChild(displayState, -1, nullptr);
 		}
         
@@ -160,6 +170,23 @@ namespace Push
         
         return state;
     }
-
+	void PushState::addHandler(String handlerName, int pos)
+	{
+		auto handlers = state[Handlers];
+		if (pos > 0)
+			handlers.insert(pos, handlerName);
+		else
+			handlers.append(handlerName);
+	}
+	void PushState::registerHandler(String name, const EventHandlerFunc&& func)
+	{
+		if (eventHandlers.contains(name))
+			return;
+		eventHandlers.set(name, func);
+	}
+	bool PushState::checkIfHandlerExists(String name)
+	{
+		return (eventHandlers.contains(name));
+	}
 
 }

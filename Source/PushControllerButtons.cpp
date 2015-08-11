@@ -55,7 +55,7 @@ namespace Push
 	const Identifier Buttons::Delete	  = Identifier("Delete");
 	const Identifier Buttons::Undo		  = Identifier("Undo");
 
-	const Identifier Buttons::allButtons[] = { "Tap", "Metronome", "Master", "Stop", "Left", "Right", "Up", "Down",
+	const std::array<Identifier, 40> Buttons::allButtons = { "Tap", "Metronome", "Master", "Stop", "Left", "Right", "Up", "Down",
 		"Select", "Shift", "Note", "Session", "AddEffect", "AddTrack", "OctaveDown",
 		"OctaveUp", "Repeat", "Accent", "Scales", "UserMode", "Mute", "Solo", "DeviceLeft",
 		"DeviceRight", "Play", "Record", "New", "Duplicate", "Automation", "FixedLength", "Device",

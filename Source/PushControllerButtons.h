@@ -12,6 +12,7 @@
 #define PUSHCONTROLLERBUTTONS_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include <array>
 
 namespace Push
 {
@@ -71,7 +72,7 @@ namespace Push
 
 
 
-		static const Identifier allButtons[];
+		static const std::array<Identifier, 40> allButtons;
 		static const HashMap<Identifier, uint8, IdentifierHash>& buttonsToMidiCC();
 
 	private:
