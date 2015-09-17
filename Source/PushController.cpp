@@ -72,6 +72,12 @@ namespace Push
 
 		return MidiMessage::createSysExMessage(m, messageSize);
 	}
+    
+    //PushControllerHandle static initializations
+    ReferenceCountedObjectPtr<PushControllerHandle> PushControllerHandle::_singleInstance;
+    bool                                            PushControllerHandle::isControllerConnected = false;
+
+    //PushState static initializations
     const Identifier PushState::ControllerState     = Identifier("ControllerState");
     const Identifier PushState::PadsState           = Identifier("PadsState");
     const Identifier PushState::TopRowState         = Identifier("TopRowState");
@@ -88,7 +94,64 @@ namespace Push
     const Identifier PushState::Handlers            = Identifier("Handlers");
 
 	HashMap<String, PushState::EventHandlerFunc>    PushState::eventHandlers;
-	ReferenceCountedObjectPtr<PushControllerHandle> PushState::activeStateListener;
+    PushState                                       PushState::activeState;
+
+
+    PushControllerHandle::PushControllerHandle()
+    {
+        //Singleton constructor. 
+        StringArray inList  = MidiInput::getDevices();
+        StringArray outList = MidiOutput::getDevices();
+
+        int inControl  = -1;
+        int outDisplay = -1;
+        int outControl = -1;
+
+        //TODO: Wild card expressions need to be improved here !
+        for (int i = 0; i < inList.size(); ++i)
+        {
+            if (inList[i].matchesWildcard("*User Port*", true))
+                inControl = i;
+        }
+        for (int i = 0; i < outList.size(); ++i)
+        {
+            if (outList[i].matchesWildcard("*User Port*", true))
+                outControl = i;
+            else if (outList[i].matchesWildcard("*Live Port*", true))
+                outDisplay = i;
+        }
+        if (inControl < 0 || outControl < 0 || outDisplay < 0)
+            return; //Didn't find the controller !
+
+        //TODO !
+        //MidiInput::openDevice(inControl,)
+
+        isControllerConnected = true;
+    }
+    void PushControllerHandle::valueTreePropertyChanged(ValueTree& treeWhosePropertyHasChanged, const Identifier& property)
+    {
+        //TODO !
+    }
+    void PushControllerHandle::valueTreeChildAdded(ValueTree& parentTree, ValueTree& childWhichHasBeenAdded)
+    {
+        //TODO !
+    }
+    void PushControllerHandle::valueTreeChildRemoved(ValueTree& parentTree, ValueTree& childWhichHasBeenRemoved)
+    {
+        //TODO !
+    }
+    void PushControllerHandle::valueTreeChildOrderChanged(ValueTree& parentTreeWhoseChildrenHaveMoved)
+    {
+        //TODO !
+    }
+    void PushControllerHandle::valueTreeParentChanged(ValueTree& treeWhoseParentHasChanged)
+    {
+        //TODO !
+    }
+    void PushControllerHandle::valueTreeRedirected(ValueTree& treeWhichHasBeenChanged)
+    {
+        //TODO !
+    }
     
     ValueTree PushState::createNewDefaultState()
     {
@@ -165,10 +228,22 @@ namespace Push
 			state.addChild(displayState, -1, nullptr);
 		}
         
-        //Do nothing with events by default.
+        //Do nothing with incoming events from the hardware by default.
         state.setProperty(Handlers, Array<var>(), nullptr);
+
         
         return state;
+    }
+    void PushState::setActiveState(PushState& _state)
+    {
+        //Note: this should trigger the listener to change the state changes to the hardware
+        //TODO: check this works properly !
+        //otherwise will need to manually flush the state
+        activeState.state = _state.state;
+    }
+    void PushState::turnOnListener()
+    {
+        activeState.state.addListener(PushControllerHandle::getHandle());
     }
 	void PushState::addHandler(String handlerName, int pos)
 	{

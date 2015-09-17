@@ -32,21 +32,34 @@ namespace Push
 								 public virtual ValueTree::Listener
 	{
 	public:
-		static ReferenceCountedObjectPtr<PushControllerHandle> getHandle();
+        static ReferenceCountedObjectPtr<PushControllerHandle> getHandle()
+        {
+            if (!_singleInstance)
+                _singleInstance = ReferenceCountedObjectPtr<PushControllerHandle>(new PushControllerHandle());
+            return _singleInstance;
+        }
+        //Implement ValueTree::Listener
+        void valueTreePropertyChanged(ValueTree& treeWhosePropertyHasChanged, const Identifier& property) override;
+        void valueTreeChildAdded(ValueTree& parentTree, ValueTree& childWhichHasBeenAdded) override;
+        void valueTreeChildRemoved(ValueTree& parentTree, ValueTree& childWhichHasBeenRemoved) override;
+        void valueTreeChildOrderChanged(ValueTree& parentTreeWhoseChildrenHaveMoved) override;
+        void valueTreeParentChanged(ValueTree& treeWhoseParentHasChanged) override;
+        void valueTreeRedirected(ValueTree& treeWhichHasBeenChanged) override;
 
 	private:
-		PushControllerHandle() {}
+        PushControllerHandle();
 		PushControllerHandle(const PushControllerHandle&) {}
 		PushControllerHandle& operator=(const PushControllerHandle&) {}
 
 		static ReferenceCountedObjectPtr<PushControllerHandle> _singleInstance;
+        static bool isControllerConnected;
 	};
     
     /** Class encapsulating the ValueTree that represents the controller state and related static methdods and constants */
-    class PushState
+    class PushState : public MidiInputCallback
     {
     public:
-        typedef std::function<void(MidiMessage,juce::ValueTree)> EventHandlerFunc;
+        typedef std::function<void(MidiMessage,juce::ValueTree&)> EventHandlerFunc;
         
         //Identifiers for the state ValueTree
         static const Identifier ControllerState;
@@ -64,11 +77,12 @@ namespace Push
         
         static const Identifier Handlers;
         
-        //Current active state
-        static juce::ValueTree activeState;
         
-		static void setActiveState(juce::ValueTree state) { activeState = state; }
-		static void setActiveStateListener(ReferenceCountedObjectPtr<PushControllerHandle>&&  listener) { activeStateListener = listener; }
+        static void setActiveState(PushState& state);
+
+        //Turn on the state listener by calling PushControllerHandle::getHandle()
+        //and setting it as the listener to the active state
+        static void turnOnListener();
         
         /** The class is a thin wrapper around a ValueTree intended to add some convenience functions.
          *  The constructor creates a default empty state with neutral buttons and screen
@@ -78,7 +92,7 @@ namespace Push
             state = createNewDefaultState();
         }
         virtual ~PushState() {}
-        operator juce::ValueTree() { return state; }
+        operator juce::ValueTree&() { return state; }
         /** Add an event handler to a state. Note that handlers are executed in order and thus
         the position matters since handlers may modify the state. By default insert at the end of the 
          list */
@@ -94,9 +108,10 @@ namespace Push
     private:
         //Event handler repository
         static HashMap<String,EventHandlerFunc>				   eventHandlers;
-        static ReferenceCountedObjectPtr<PushControllerHandle> activeStateListener;
-        
         juce::ValueTree state;
+
+        //Current active state
+        static PushState activeState;
     };
 }
 
