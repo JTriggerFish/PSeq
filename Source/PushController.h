@@ -29,7 +29,8 @@ namespace Push
 	/** Handle to controller hardware, singleton class
 	*/
 	class PushControllerHandle : public ReferenceCountedObject,
-								 public virtual ValueTree::Listener
+								 public virtual ValueTree::Listener,
+                                 public MidiInputCallback
 	{
 	public:
         static ReferenceCountedObjectPtr<PushControllerHandle> getHandle()
@@ -45,18 +46,27 @@ namespace Push
         void valueTreeChildOrderChanged(ValueTree& parentTreeWhoseChildrenHaveMoved) override;
         void valueTreeParentChanged(ValueTree& treeWhoseParentHasChanged) override;
         void valueTreeRedirected(ValueTree& treeWhichHasBeenChanged) override;
+        
+        //Implement MidiInputCallback
+        void handleIncomingMidiMessage (MidiInput *source, const MidiMessage &message) override;
+        void handlePartialSysexMessage (MidiInput *source, const uint8 *messageData, int numBytesSoFar, double timestamp) override {}
 
 	private:
         PushControllerHandle();
 		PushControllerHandle(const PushControllerHandle&) {}
-		PushControllerHandle& operator=(const PushControllerHandle&) {}
+        PushControllerHandle& operator=(const PushControllerHandle&) {return *this;}
 
 		static ReferenceCountedObjectPtr<PushControllerHandle> _singleInstance;
         static bool isControllerConnected;
+        
+        ReferenceCountedObjectPtr<MidiInput>  controlIn;
+        ReferenceCountedObjectPtr<MidiOutput> controlOut;
+        ReferenceCountedObjectPtr<MidiOutput> displayOut;
+
 	};
     
     /** Class encapsulating the ValueTree that represents the controller state and related static methdods and constants */
-    class PushState : public MidiInputCallback
+    class PushState
     {
     public:
         typedef std::function<void(MidiMessage,juce::ValueTree&)> EventHandlerFunc;
@@ -79,6 +89,7 @@ namespace Push
         
         
         static void setActiveState(PushState& state);
+        static PushState& getActiveState() { return activeState; }
 
         //Turn on the state listener by calling PushControllerHandle::getHandle()
         //and setting it as the listener to the active state
@@ -97,6 +108,8 @@ namespace Push
         the position matters since handlers may modify the state. By default insert at the end of the 
          list */
 		void addHandler(String handlerName, int pos = -1);
+        void handleMidiInputEvent(MidiInput *source, const MidiMessage &message);
+        
         
         static juce::ValueTree createNewDefaultState();
         /** Add a handler to the repository. Nothing will be done if there is an existing
@@ -105,9 +118,11 @@ namespace Push
         static bool checkIfHandlerExists(String name);
         
         
+        
+        
     private:
         //Event handler repository
-        static HashMap<String,EventHandlerFunc>				   eventHandlers;
+        static HashMap<String,EventHandlerFunc>	   eventHandlers;
         juce::ValueTree state;
 
         //Current active state

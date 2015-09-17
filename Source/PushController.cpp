@@ -123,11 +123,16 @@ namespace Push
         if (inControl < 0 || outControl < 0 || outDisplay < 0)
             return; //Didn't find the controller !
 
-        //TODO !
-        //MidiInput::openDevice(inControl,)
-
+        controlIn  = MidiInput::openDevice(inControl, this);
+        controlOut = MidiOutput::openDevice(outControl);
+        displayOut = MidiOutput::openDevice(outDisplay);
         isControllerConnected = true;
     }
+    void PushControllerHandle::handleIncomingMidiMessage (MidiInput *source, const MidiMessage &message)
+    {
+        PushState::getActiveState().handleMidiInputEvent(source, message);
+    }
+
     void PushControllerHandle::valueTreePropertyChanged(ValueTree& treeWhosePropertyHasChanged, const Identifier& property)
     {
         //TODO !
@@ -253,6 +258,10 @@ namespace Push
 		else
 			handlers.append(handlerName);
 	}
+    void PushState::handleMidiInputEvent(MidiInput *source, const MidiMessage &message)
+    {
+        //TODO !
+    }
 	void PushState::registerHandler(String name, const EventHandlerFunc&& func)
 	{
 		if (eventHandlers.contains(name))
