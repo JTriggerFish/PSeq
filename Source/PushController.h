@@ -11,6 +11,7 @@
 #ifndef PUSHCONTROLLER_H_INCLUDED
 #define PUSHCONTROLLER_H_INCLUDED
 
+#include <memory>
 #include "PushControllerColors.h"
 #include "PushControllerButtons.h"
 
@@ -51,6 +52,11 @@ namespace Push
         void handleIncomingMidiMessage (MidiInput *source, const MidiMessage &message) override;
         void handlePartialSysexMessage (MidiInput *source, const uint8 *messageData, int numBytesSoFar, double timestamp) override {}
 
+        void connectDevice();
+        void disconnectDevice();
+
+        ~PushControllerHandle() { disconnectDevice(); }
+
 	private:
         PushControllerHandle();
 		PushControllerHandle(const PushControllerHandle&) {}
@@ -59,9 +65,9 @@ namespace Push
 		static ReferenceCountedObjectPtr<PushControllerHandle> _singleInstance;
         static bool isControllerConnected;
         
-        ReferenceCountedObjectPtr<MidiInput>  controlIn;
-        ReferenceCountedObjectPtr<MidiOutput> controlOut;
-        ReferenceCountedObjectPtr<MidiOutput> displayOut;
+        std::shared_ptr<MidiInput>  controlIn;
+        std::shared_ptr<MidiOutput> controlOut;
+        std::shared_ptr<MidiOutput> displayOut;
 
 	};
     

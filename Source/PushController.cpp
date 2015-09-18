@@ -96,8 +96,7 @@ namespace Push
 	HashMap<String, PushState::EventHandlerFunc>    PushState::eventHandlers;
     PushState                                       PushState::activeState;
 
-
-    PushControllerHandle::PushControllerHandle()
+    void PushControllerHandle::connectDevice()
     {
         //Singleton constructor. 
         StringArray inList  = MidiInput::getDevices();
@@ -123,10 +122,35 @@ namespace Push
         if (inControl < 0 || outControl < 0 || outDisplay < 0)
             return; //Didn't find the controller !
 
-        controlIn  = MidiInput::openDevice(inControl, this);
-        controlOut = MidiOutput::openDevice(outControl);
-        displayOut = MidiOutput::openDevice(outDisplay);
+        controlIn  = std::shared_ptr<MidiInput>(MidiInput::openDevice(inControl, this));
+        controlOut = std::shared_ptr<MidiOutput>(MidiOutput::openDevice(outControl));
+        displayOut = std::shared_ptr<MidiOutput>(MidiOutput::openDevice(outDisplay));
+        
+        controlIn->start();
+        controlOut->startBackgroundThread();
+        displayOut->startBackgroundThread();
+
         isControllerConnected = true;
+    }
+    void PushControllerHandle::disconnectDevice()
+    {
+        if (!isControllerConnected)
+            return;
+
+        controlIn->stop();
+        controlOut->stopBackgroundThread();
+        displayOut->stopBackgroundThread();
+
+        controlIn.reset();
+        controlOut.reset();
+        displayOut.reset();
+
+        isControllerConnected = false;
+    }
+
+    PushControllerHandle::PushControllerHandle()
+    {
+        connectDevice();
     }
     void PushControllerHandle::handleIncomingMidiMessage (MidiInput *source, const MidiMessage &message)
     {
