@@ -27,6 +27,7 @@
 #define JUCE_MODULE_AVAILABLE_juce_audio_formats            1
 #define JUCE_MODULE_AVAILABLE_juce_audio_plugin_client      1
 #define JUCE_MODULE_AVAILABLE_juce_audio_processors         1
+#define JUCE_MODULE_AVAILABLE_juce_audio_utils              1
 #define JUCE_MODULE_AVAILABLE_juce_core                     1
 #define JUCE_MODULE_AVAILABLE_juce_data_structures          1
 #define JUCE_MODULE_AVAILABLE_juce_events                   1
@@ -48,6 +49,10 @@
 
 #ifndef    JUCE_WASAPI
  //#define JUCE_WASAPI
+#endif
+
+#ifndef    JUCE_WASAPI_EXCLUSIVE
+ //#define JUCE_WASAPI_EXCLUSIVE
 #endif
 
 #ifndef    JUCE_DIRECTSOUND
@@ -133,6 +138,10 @@
 
 #ifndef    JUCE_INCLUDE_ZLIB_CODE
  //#define JUCE_INCLUDE_ZLIB_CODE
+#endif
+
+#ifndef    JUCE_USE_CURL
+ //#define JUCE_USE_CURL
 #endif
 
 //==============================================================================

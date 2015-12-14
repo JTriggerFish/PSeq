@@ -43,8 +43,8 @@ namespace Push
         //Implement ValueTree::Listener
         void valueTreePropertyChanged(ValueTree& treeWhosePropertyHasChanged, const Identifier& property) override;
         void valueTreeChildAdded(ValueTree& parentTree, ValueTree& childWhichHasBeenAdded) override;
-        void valueTreeChildRemoved(ValueTree& parentTree, ValueTree& childWhichHasBeenRemoved) override;
-        void valueTreeChildOrderChanged(ValueTree& parentTreeWhoseChildrenHaveMoved) override;
+        void valueTreeChildRemoved(ValueTree& parentTree, ValueTree& childWhichHasBeenRemoved, int oldIndex) override;
+        void valueTreeChildOrderChanged(ValueTree& parentTreeWhoseChildrenHaveMoved, int oldIndex, int newIndex) override;
         void valueTreeParentChanged(ValueTree& treeWhoseParentHasChanged) override;
         void valueTreeRedirected(ValueTree& treeWhichHasBeenChanged) override;
         

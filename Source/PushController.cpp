@@ -165,11 +165,11 @@ namespace Push
     {
         //TODO !
     }
-    void PushControllerHandle::valueTreeChildRemoved(ValueTree& parentTree, ValueTree& childWhichHasBeenRemoved)
+    void PushControllerHandle::valueTreeChildRemoved(ValueTree& parentTree, ValueTree& childWhichHasBeenRemoved, int oldIndex)
     {
         //TODO !
     }
-    void PushControllerHandle::valueTreeChildOrderChanged(ValueTree& parentTreeWhoseChildrenHaveMoved)
+    void PushControllerHandle::valueTreeChildOrderChanged(ValueTree& parentTreeWhoseChildrenHaveMoved, int oldIndex, int newIndex)
     {
         //TODO !
     }

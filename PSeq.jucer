@@ -8,7 +8,7 @@
               pluginIsSynth="1" pluginWantsMidiIn="1" pluginProducesMidiOut="1"
               pluginSilenceInIsSilenceOut="0" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="PSeqAU" pluginRTASCategory="" aaxIdentifier="com.yourcompany.PSeq"
-              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="3.2.0"
+              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.0.2"
               companyName="TriggerFish Audio" companyEmail="FastTriggerFish@gmail.com">
   <MAINGROUP id="mmzPuS" name="PSeq">
     <GROUP id="{1581B1B5-F662-883E-1223-96650676BA3E}" name="Source">
@@ -41,17 +41,18 @@
                        isDebug="0" optimisation="3" targetName="PSeq"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_core" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_events" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_graphics" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_data_structures" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_gui_basics" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_gui_extra" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_audio_basics" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_audio_devices" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_audio_formats" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_audio_processors" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_audio_plugin_client" path="../protoplug/Frameworks/JuceModules"/>
+        <MODULEPATH id="juce_core" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
     <VS2012 targetFolder="Builds/VisualStudio2012" vstFolder="c:\Lua\vstsdk2.4"
@@ -63,21 +64,22 @@
                        isDebug="0" optimisation="3" targetName="PSeq"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_core" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_events" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_graphics" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_data_structures" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_gui_basics" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_gui_extra" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_audio_basics" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_audio_devices" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_audio_formats" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_audio_processors" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_audio_plugin_client" path="../protoplug/Frameworks/JuceModules"/>
+        <MODULEPATH id="juce_core" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_events" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_graphics" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_data_structures" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_basics" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_extra" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_basics" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_devices" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_formats" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_processors" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../JUCE/modules"/>
       </MODULEPATHS>
     </VS2012>
-    <VS2013 targetFolder="Builds/VisualStudio2013" vstFolder="c:\Lua\vstsdk2.4"
-            vst3Folder="c:\Lua\VST3 SDK">
+    <VS2013 targetFolder="Builds/VisualStudio2013" vstFolder="c:\JUCE\vstsdk2.4"
+            vst3Folder="c:\JUCE\VST3 SDK">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        isDebug="1" optimisation="1" targetName="PSeq"/>
@@ -85,17 +87,18 @@
                        isDebug="0" optimisation="3" targetName="PSeq"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_gui_extra" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_gui_basics" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_graphics" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_events" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_data_structures" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_core" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_audio_processors" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_audio_plugin_client" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_audio_formats" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_audio_devices" path="../protoplug/Frameworks/JuceModules"/>
-        <MODULEPATH id="juce_audio_basics" path="../protoplug/Frameworks/JuceModules"/>
+        <MODULEPATH id="juce_gui_extra" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_basics" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_graphics" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_events" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_data_structures" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_core" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_processors" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_formats" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_devices" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_basics" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../JUCE/modules"/>
       </MODULEPATHS>
     </VS2013>
   </EXPORTFORMATS>
@@ -105,6 +108,7 @@
     <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
     <MODULES id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"/>
     <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0"/>
     <MODULES id="juce_core" showAllCode="1" useLocalCopy="0"/>
     <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
     <MODULES id="juce_events" showAllCode="1" useLocalCopy="0"/>
