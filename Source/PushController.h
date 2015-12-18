@@ -55,15 +55,29 @@ namespace Push
         void connectDevice();
         void disconnectDevice();
 
+        //TODO SET ME !
+        void setSampleRate(double sr) { sampleRate = sr; }
+
         ~PushControllerHandle() { disconnectDevice(); }
 
 	private:
         PushControllerHandle();
 		PushControllerHandle(const PushControllerHandle&) {}
         PushControllerHandle& operator=(const PushControllerHandle&) {return *this;}
+        
+        void sendPadsStates();
+        void sendTopRowStates();
+        void sendBottomRowStates();
+        void sendSceneButtonsStates();
+        void sendButtonsStates();
+        void sendDisplayState();
+
 
 		static ReferenceCountedObjectPtr<PushControllerHandle> _singleInstance;
         static bool isControllerConnected;
+
+        //Needs to be set by host / plugin !
+        double    sampleRate;
         
         std::shared_ptr<MidiInput>  controlIn;
         std::shared_ptr<MidiOutput> controlOut;
@@ -122,10 +136,7 @@ namespace Push
          *  handler with this identifier */
         static void registerHandler(String name, const EventHandlerFunc&& func);
         static bool checkIfHandlerExists(String name);
-        
-        
-        
-        
+
     private:
         //Event handler repository
         static HashMap<String,EventHandlerFunc>	   eventHandlers;

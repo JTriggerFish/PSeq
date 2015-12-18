@@ -3,13 +3,14 @@
 <JUCERPROJECT id="tQXePK" name="PSeq" projectType="audioplug" version="0.9.0"
               bundleIdentifier="com.yourcompany.PSeq" includeBinaryInAppConfig="1"
               buildVST="1" buildVST3="1" buildAU="1" buildRTAS="0" buildAAX="0"
-              pluginName="PSeq" pluginDesc="PSeq" pluginManufacturer="yourcompany"
+              pluginName="PSeq" pluginDesc="PSeq" pluginManufacturer="Trigger FishAudio"
               pluginManufacturerCode="TFsh" pluginCode="PSeq" pluginChannelConfigs="{1, 1}, {2, 2}"
               pluginIsSynth="1" pluginWantsMidiIn="1" pluginProducesMidiOut="1"
               pluginSilenceInIsSilenceOut="0" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="PSeqAU" pluginRTASCategory="" aaxIdentifier="com.yourcompany.PSeq"
-              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.0.2"
-              companyName="TriggerFish Audio" companyEmail="FastTriggerFish@gmail.com">
+              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.1.0"
+              companyName="TriggerFish Audio" companyEmail="FastTriggerFish@gmail.com"
+              pluginIsMidiEffectPlugin="0">
   <MAINGROUP id="mmzPuS" name="PSeq">
     <GROUP id="{1581B1B5-F662-883E-1223-96650676BA3E}" name="Source">
       <FILE id="bAH4Hb" name="PushControllerButtons.cpp" compile="1" resource="0"

@@ -148,7 +148,7 @@ namespace Push
         isControllerConnected = false;
     }
 
-    PushControllerHandle::PushControllerHandle()
+    PushControllerHandle::PushControllerHandle() : sampleRate(44100.)
     {
         connectDevice();
     }
@@ -156,30 +156,147 @@ namespace Push
     {
         PushState::getActiveState().handleMidiInputEvent(source, message);
     }
+    void PushControllerHandle::sendPadsStates()
+    {
+        ValueTree& currentState = PushState::getActiveState();
+        MidiBuffer msgBlock;
+        double millisecondCounterToStartAt = Time::getMillisecondCounter();
+
+        Array<var>* colors = currentState.getChildWithName(PushState::PadsState)[PushState::Color].getArray();
+        //TODO: right now we have to refresh all the colors if one changes, check whether this is an issue
+        for (uint8 r = 0; r < 8; ++r)
+        {
+            for (uint8 c = 0; c < 8; ++c)
+                msgBlock.addEvent(padChangeMessage(r, c, int((*colors)[r * 8 + c])), 0);
+        }
+        controlOut->sendBlockOfMessages(msgBlock, millisecondCounterToStartAt, sampleRate);
+    }
+    void PushControllerHandle::sendTopRowStates()
+    {
+        ValueTree& currentState = PushState::getActiveState();
+        MidiBuffer msgBlock;
+        double millisecondCounterToStartAt = Time::getMillisecondCounter();
+
+        Array<var>* colors = currentState.getChildWithName(PushState::TopRowState)[PushState::Color].getArray();
+        for (uint8 r = 0; r < 8; ++r)
+        {
+            msgBlock.addEvent(topRowChangeMessage(r, int((*colors)[r])), 0);
+        }
+        controlOut->sendBlockOfMessages(msgBlock, millisecondCounterToStartAt, sampleRate);
+    }
+    void PushControllerHandle::sendBottomRowStates()
+    {
+        ValueTree& currentState = PushState::getActiveState();
+        MidiBuffer msgBlock;
+        double millisecondCounterToStartAt = Time::getMillisecondCounter();
+
+        Array<var>* colors = currentState.getChildWithName(PushState::BottomRowState)[PushState::Color].getArray();
+        for (uint8 r = 0; r < 8; ++r)
+        {
+            msgBlock.addEvent(bottomRowChangeMessage(r, int((*colors)[r])), 0);
+        }
+        controlOut->sendBlockOfMessages(msgBlock, millisecondCounterToStartAt, sampleRate);
+    }
+    void PushControllerHandle::sendSceneButtonsStates()
+    {
+        ValueTree& currentState = PushState::getActiveState();
+        MidiBuffer msgBlock;
+        double millisecondCounterToStartAt = Time::getMillisecondCounter();
+
+        Array<var>* colors = currentState.getChildWithName(PushState::SceneButtonsState)[PushState::Color].getArray();
+        for (uint8 r = 0; r < 8; ++r)
+        {
+            msgBlock.addEvent(sceneButtonChangeMessage(r, int((*colors)[r])), 0);
+        }
+        controlOut->sendBlockOfMessages(msgBlock, millisecondCounterToStartAt, sampleRate);
+    }
+    void PushControllerHandle::sendButtonsStates()
+    {
+        ValueTree& currentState = PushState::getActiveState();
+        MidiBuffer msgBlock;
+        double millisecondCounterToStartAt = Time::getMillisecondCounter();
+
+        auto buttonStates = currentState.getChildWithName(PushState::ButtonsState);
+        for (auto b : Push::Buttons::allButtons)
+        {
+            ValueTree buttonValueTree = buttonStates.getChildWithName(b);
+            msgBlock.addEvent(buttonChangeMessage(b, int(buttonValueTree.getProperty(PushState::ButtonState))), 0);
+        }
+        controlOut->sendBlockOfMessages(msgBlock, millisecondCounterToStartAt, sampleRate);
+    }
+    void PushControllerHandle::sendDisplayState()
+    {
+        ValueTree& currentState = PushState::getActiveState();
+        MidiBuffer msgBlock;
+        double millisecondCounterToStartAt = Time::getMillisecondCounter();
+
+        ValueTree displayState = currentState.getChildWithName(PushState::DisplayState);
+        auto lines = displayState[PushState::LineText];
+        for (uint8 l = 0; l < 4; ++l)
+            msgBlock.addEvent(displayChangeMessage(l, lines[l]), 0);
+
+        displayOut->sendBlockOfMessages(msgBlock, millisecondCounterToStartAt, sampleRate);
+    }
 
     void PushControllerHandle::valueTreePropertyChanged(ValueTree& treeWhosePropertyHasChanged, const Identifier& property)
     {
-        //TODO !
+        ValueTree& currentState = PushState::getActiveState();
+        if (treeWhosePropertyHasChanged == currentState.getChildWithName(PushState::PadsState))
+        {
+            if (property == PushState::Color)
+                sendPadsStates();
+        }
+        else if (treeWhosePropertyHasChanged == currentState.getChildWithName(PushState::TopRowState))
+        {
+            if (property == PushState::Color)
+                sendTopRowStates();
+        }
+        else if (treeWhosePropertyHasChanged == currentState.getChildWithName(PushState::BottomRowState))
+        {
+            if (property == PushState::Color)
+                sendBottomRowStates();
+        }
+        else if (treeWhosePropertyHasChanged == currentState.getChildWithName(PushState::SceneButtonsState))
+        {
+            if (property == PushState::Color)
+                sendSceneButtonsStates();
+        }
+        else if (treeWhosePropertyHasChanged == currentState.getChildWithName(PushState::DisplayState))
+        {
+            sendDisplayState();
+        }
+        else
+        {
+            //Should be one of the buttons then, since each has its own value tree
+            if (property == PushState::ButtonState)
+                sendButtonsStates();
+        }
     }
     void PushControllerHandle::valueTreeChildAdded(ValueTree& parentTree, ValueTree& childWhichHasBeenAdded)
     {
-        //TODO !
+        //Nothing for now
     }
     void PushControllerHandle::valueTreeChildRemoved(ValueTree& parentTree, ValueTree& childWhichHasBeenRemoved, int oldIndex)
     {
-        //TODO !
+        //Nothing for now
     }
     void PushControllerHandle::valueTreeChildOrderChanged(ValueTree& parentTreeWhoseChildrenHaveMoved, int oldIndex, int newIndex)
     {
-        //TODO !
+        //Nothing for now
     }
     void PushControllerHandle::valueTreeParentChanged(ValueTree& treeWhoseParentHasChanged)
     {
-        //TODO !
+        //Nothing for now
     }
     void PushControllerHandle::valueTreeRedirected(ValueTree& treeWhichHasBeenChanged)
     {
-        //TODO !
+        //For now just refresh all
+        sendPadsStates();
+        sendTopRowStates();
+        sendBottomRowStates();
+        sendSceneButtonsStates();
+        sendButtonsStates();
+        sendDisplayState();
     }
     
     ValueTree PushState::createNewDefaultState()
@@ -265,7 +382,7 @@ namespace Push
     }
     void PushState::setActiveState(PushState& _state)
     {
-        //Note: this should trigger the listener to change the state changes to the hardware
+        //Note: this should trigger the listener to send the state changes to the hardware
         //TODO: check this works properly !
         //otherwise will need to manually flush the state
         activeState.state = _state.state;
@@ -284,7 +401,13 @@ namespace Push
 	}
     void PushState::handleMidiInputEvent(MidiInput *source, const MidiMessage &message)
     {
-        //TODO !
+        HashMap<String, EventHandlerFunc>::Iterator i(eventHandlers);
+        while (i.next())
+        {
+            auto _name = i.getKey();
+            auto func  = i.getValue();
+            func(message, state);
+        }
     }
 	void PushState::registerHandler(String name, const EventHandlerFunc&& func)
 	{
